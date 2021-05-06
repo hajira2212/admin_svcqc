@@ -59,6 +59,8 @@ const CompanyForms = () => {
             add.then(response => {
                 if (response) {
                     alert(response.message);
+                    window.location.href = `${process.env.PUBLIC_URL} /#/reports/company`
+
                 }
                 else {
                     alert(response.message);
@@ -70,7 +72,7 @@ const CompanyForms = () => {
         }
     }
 
-    const initialState = {
+       const initialState = {
         firstname: "",
         companyCode: "",
         companyName: "",

@@ -32,8 +32,11 @@ const WafersReport = () => {
         const wafers = getActiveWafersList().then((res) => {
             setWafersList(res.data);
             console.log(res.data);
+            
         });
     }
+
+   
 
     return (
         <>

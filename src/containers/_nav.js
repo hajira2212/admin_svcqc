@@ -78,12 +78,12 @@ const _nav =  [
       {
         _tag: 'CSidebarNavItem',
         name: 'Company Report',
-        to: '/company/reports',
+        to: '/reports/company',
       },
       {
         _tag: 'CSidebarNavItem',
         name: 'Wafers Report',
-        to: '/wafers/reports',
+        to: '/reports/wafers',
       },
     ]
   },

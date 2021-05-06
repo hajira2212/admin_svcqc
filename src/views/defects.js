@@ -30,16 +30,13 @@ const DefectsMaster = () => {
     const [defectsType, setDefectsType] = React.useState("");
     const [defectsList, setDefectsList] = useState([]);
     const [message, setMessage] = React.useState("");
-    const [selectedFile, setSelectedFile] = useState(null);
+    const [file, setFile] = React.useState(0)
 
 
     const openModal = () => {
         //this.setState({ showModal: true });
         setModal(!modal);
     }
-    useEffect(() => {
-        getDefectsList();
-    }, []);
 
     const getDefectsList = () => {
 
@@ -48,19 +45,23 @@ const DefectsMaster = () => {
         });
     }
 
+    useEffect(() => {
+        getDefectsList();
+    }, []);
+
     const handleChange = (e) => {
 
         // to get the checked value
         is_Active = e.target.value;
     };
+  
+    const Add_Defects = (defectsType, is_Active) => {
 
-    const Add_Defects = (defectsTyppe, selectedFile, is_Active) => {
+        if (defectsType != "" && file != 0) {
 
-        if (defectsTyppe != "") {
-
-            const defects_image = selectedFile.value;
+            const defects_image = file;
             const formData = new FormData();
-            formData.append("defectsType", defectsTyppe);
+            formData.append("defectsType", defectsType);
             formData.append("is_Active", is_Active);
             formData.append("defects_image", defects_image);
 
@@ -132,7 +133,7 @@ const DefectsMaster = () => {
                     </CFormGroup>
                     <CFormGroup>
                         <CLabel htmlFor="defectstype">Defects Image</CLabel>
-                        <Input class="form-control-file" type="file" onChange={(e) => setSelectedFile(e.target.value)} />
+                        <input type="file" onChange={e => setFile(e.target.files[0])} id="fileItem" className="form-control" />
                     </CFormGroup>
                     <CFormGroup>
                         <CCol xs="12" sm="4">
@@ -140,7 +141,9 @@ const DefectsMaster = () => {
                         </CCol>
                         <CCol xs="12" sm="2">
                             <Input className="checkbox" type="Checkbox" size="sm" required onChange={e => handleChange} />
+
                         </CCol>
+
                     </CFormGroup>
 
                 </ModalBody>

@@ -1,4 +1,5 @@
 import React, { lazy } from 'react'
+import { getActiveCompanyList } from "../services/list"
 import {
   CButton,
   CCard,
@@ -16,6 +17,15 @@ import {
 import CIcon from '@coreui/icons-react'
 
 const Dashboard = () => {
+
+  const getCompanyList = () => {
+    const company = getActiveCompanyList().then((res) => {
+    });
+    const counts = [];
+    counts.push(company);
+    console.log(counts);
+  }
+
   return (
 
     <CContainer>
@@ -31,8 +41,8 @@ const Dashboard = () => {
                         <span className="m-0">Total Inspectors</span>
                         <p>4555</p>
                         <div>
-                        <CIcon name="cil-settings" /> 
-                        <span> Users</span>
+                          <CIcon name="cil-settings" />
+                          <span> Users</span>
                         </div>
                       </div>
                     </div>
@@ -49,8 +59,8 @@ const Dashboard = () => {
                         <span className="m-0">Total Inspectors</span>
                         <p>4555</p>
                         <div>
-                        <CIcon name="cil-pencil" /> 
-                        <span> Wafers</span>
+                          <CIcon name="cil-pencil" />
+                          <span> Wafers</span>
                         </div>
                       </div>
                     </div>
@@ -67,8 +77,8 @@ const Dashboard = () => {
                         <span className="m-0">Total Inspectors</span>
                         <p>4555</p>
                         <div>
-                        <CIcon name="cil-user" /> 
-                        <span> Users</span>
+                          <CIcon name="cil-user" />
+                          <span> Users</span>
                         </div>
                       </div>
                     </div>
@@ -85,8 +95,8 @@ const Dashboard = () => {
                         <span className="m-0">Total Inspectors</span>
                         <p>4555</p>
                         <div>
-                        <CIcon name="cil-settings" /> 
-                        <span> Users</span>
+                          <CIcon name="cil-settings" />
+                          <span> Users</span>
                         </div>
                       </div>
                     </div>

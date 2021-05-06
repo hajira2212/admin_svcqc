@@ -29,3 +29,9 @@ export const getActiveDefectsList = () => {
     return axios.get(`${Api_url}session/defects/getActiveDefects`, config);
 };
 
+export const getStatusByStatusId = () => {
+
+    return axios.get(`${Api_url} session/status/getStatusBy/{statusId}`, config);
+};
+
+

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { HttpAuthHelper } from "../../src/helper/HTTPHelper";
-import { CREATE_COMPANY } from "../../src/helper/APIConfig"
+import { HttpFormDataHelper } from "../../src/helper/HTTPHelper";
+import { WAFERS_CREATE } from "../../src/helper/APIConfig"
 import { getActiveCompanyList, getActiveStatusList } from "../services/list"
 
 import {
@@ -47,49 +47,90 @@ const WafersForms = () => {
     const [layer, setLayer] = React.useState("");
     const [url, setUrl] = React.useState("");
     const [remarks, setRemarks] = React.useState("");
-    const [email, setEmail] = React.useState("");
-    const [contactNo, setContactNo] = React.useState("");
+    const [highPriority, setHighPriority] = React.useState(true);
+    const [selectStatus, setSelectStatus] = React.useState(0);
+    const [selectCompany, setSelectCompany] = React.useState(0);
+
     const [message, setMessage] = React.useState("");
     const [companyList, setCompanyList] = useState([]);
+    const [statusList, setStausList] = useState([]);
+    const [wafersImage, setWafersImage] = useState();
 
-    const CompanyProcess = (firstname, companyCode, companyName, address, email, contactNo) => {
 
-        if (firstname != "" && companyCode != "" && companyName != "" && address != "" && email != "" && contactNo != "") {
+    const WafersProcess = (lot, layer, url, remarks, selectCompany, selectStatus, wafersImage) => {
 
-            var credential = JSON.stringify({ firstname, companyCode, companyName, address, email, contactNo });
+        if (lot != "" && layer != "" && url != "" && remarks != "") {
 
-            let add = HttpAuthHelper(CREATE_COMPANY, "POST", credential);
+            const formData = new FormData();
+            formData.append("wafersImage", wafersImage);
+            formData.append("lot", lot);
+            formData.append("layer", layer);
+            formData.append("url", url);
+            formData.append("highPriority", highPriority);
+            formData.append("is_Active", true);
+            formData.append("remarks", remarks);
+            formData.append("companyId", selectCompany);
+            formData.append("statusId", selectStatus);
+
+            let add = HttpFormDataHelper(WAFERS_CREATE, "POST", formData);
             add.then(response => {
                 if (response) {
                     alert(response.message);
+                    window.location.href = `${process.env.PUBLIC_URL} /#/reports/wafers`
+
                 }
                 else {
                     alert(response.message);
                 }
             });
+
         }
         else {
             alert("Please fill out this fields!");
         }
     }
 
+    const handleChange = (e) => {
+
+        // to get the checked value
+        highPriority = e.target.value;
+    };
+
+   
+
+    const handleImages = (e) => {
+        if (e.target.files) {
+            setWafersImage({ ...wafersImage, ...e.target.files });
+        }
+    };
+
+    const selectStatusChange = (e) => {
+
+        selectStatus = e.target.value;
+    };
+
+    const selectCompanyChange = (e) => {
+
+        selectCompany = e.target.value;
+    };
+
+
     useEffect(() => {
         getCompanyList();
+        getStatusList();
     }, []);
 
     const getCompanyList = () => {
         const company = getActiveCompanyList().then((res) => {
-
+            setCompanyList(res.data);
         });
     }
 
     const getStatusList = () => {
         const status = getActiveStatusList().then((res) => {
-            // setStausList(res.data);
-
+            setStausList(res.data);
         });
     }
-
     const ClearProcess = (e) => {
         e.target.reset();
     }
@@ -123,23 +164,39 @@ const WafersForms = () => {
                                 <CCol xs="6">
                                     <CFormGroup>
                                         <CLabel htmlFor="email">Company Name</CLabel>
-                                        <select class="custom-select" name="select" id="select"  >
+                                        <select class="custom-select" name="select" id="select" onChange={e => setSelectCompany(e.target.value)}>
                                             <option value="0">Please select company name</option>
+                                            {companyList.map(company => (
+                                                <option
+                                                    value={company.id}
+                                                >
+                                                    {company.companyName}
+                                                </option>
+                                            ))}
                                         </select>
                                     </CFormGroup>
                                 </CCol>
                                 <CCol xs="6">
                                     <CFormGroup>
                                         <CLabel htmlFor="mobile">Statu Type</CLabel>
-                                        <select class="custom-select" name="select" id="select">
+                                        <select class="custom-select" name="select" id="select" onChange={e => setSelectStatus(e.target.value)}>
                                             <option value="0">Please select status type</option>
+                                            {statusList.map(status => (
+                                                <option
+                                                    value={status.id}
+                                                >
+                                                    {status.statusType}
+                                                </option>
+                                            ))}
+
                                         </select>
                                     </CFormGroup>
                                 </CCol>
                             </CFormGroup>
 
                             <CFormGroup>
-                                <CLabel htmlFor="email">Wafers Images</CLabel>
+                                <CLabel htmlFor="image">Wafers Images</CLabel>
+                                <input type="file" className="form-control" multiple onChange={handleImages} />
                             </CFormGroup>
                             <CFormGroup>
                                 <CLabel htmlFor="remarks">Remarks</CLabel>
@@ -147,16 +204,16 @@ const WafersForms = () => {
                             </CFormGroup>
 
                             <CFormGroup row className="my-0">
-                                <CCol xs="6" sm="4">
+                                <CCol xs="6" sm="2">
                                     <CLabel htmlFor="new">HighPriority</CLabel>
                                 </CCol>
                                 <CCol xs="6" sm="2">
-                                    <Input className="checkbox" type="Checkbox" size="sm" required />
+                                    <Input className="checkbox" type="Checkbox" size="sm" required onChange={e => handleChange} />
                                 </CCol>
                             </CFormGroup>
                         </CCardBody>
                         <CCardFooter>
-                            <CButton type="submit" color="primary" onClick={() => CompanyProcess()} ><CIcon name="cil-scrubber" /> Submit</CButton> <CButton type="reset" size="sm" color="danger" onClick={(e) => ClearProcess()}><CIcon name="cil-ban" /> Reset</CButton>
+                            <CButton type="submit" color="primary" onClick={() => WafersProcess(lot, layer, url, remarks, selectCompany, selectStatus, wafersImage)} ><CIcon name="cil-scrubber" /> Submit</CButton> <CButton type="reset" size="sm" color="danger" onClick={(e) => ClearProcess()}><CIcon name="cil-ban" /> Reset</CButton>
                         </CCardFooter>
                     </CCard>
                 </CCol>

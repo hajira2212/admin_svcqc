@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { HttpAuthHelper } from "../helper/HTTPHelper";
 import { STATUS_CREATE, GET_ACTIVE_STATUS } from "../helper/APIConfig"
 import { Icons } from "../assets/icons/index"
-import { getActiveStatusList } from "../services/list"
+import { getActiveStatusList,getStatusByStatusId } from "../services/list"
 
 
 import {
@@ -77,6 +77,13 @@ const StatusMaster = () => {
         }
     }
 
+    const getStatusById = () => {
+
+        const statusById = getStatusByStatusId().then((res) => {
+            console.log(res.data);
+        });
+    }
+
     return (
         <>
             <CRow>
@@ -93,7 +100,7 @@ const StatusMaster = () => {
                                             <th>S.No</th>
                                             <th>Status Type</th>
                                             <th>Is Active</th>
-
+                                            <th>Action</th>
 
                                         </tr>
                                     </thead>
@@ -103,7 +110,11 @@ const StatusMaster = () => {
                                                 <td>{index + 1}</td>
                                                 <td>{status.statusType}</td>
                                                 <td>{status.is_Active ? <span class="badge badge-success">Active</span> : <span class="badge badge-danger">InActive</span>}</td>
+
+                                                <td>  <span class="badge badge-primary" onClick={openModal}>Edit  </span>  &nbsp;    
+                                                    <span class="badge badge-danger">    Delete</span></td>
                                             </tr>
+
                                         ))}
                                     </tbody>
                                 </table>

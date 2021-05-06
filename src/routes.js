@@ -37,8 +37,8 @@ const routes = [
   { path: '/settings/profile', name: 'settings / Profile', component: Profile }, 
 
   // reports
-  { path: '/company/reports', name: 'Reports / company List', component: CompanyReports }, 
-  { path: '/wafers/reports', name: 'Reports / wafers List', component: WafersReports }, 
+  { path: '/reports/company', name: 'Reports / company List', component: CompanyReports }, 
+  { path: '/reports/wafers', name: 'Reports / wafers List', component: WafersReports }, 
 
  
    
