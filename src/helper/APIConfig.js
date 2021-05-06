@@ -15,6 +15,7 @@ export const PUT_USER = url + "user/update";
 export const CHANGE_PASSWORD = url + "session/user/change/password";
 export const PUT_USER_IMAGE = url + "session/defects/getDefects";
 export const WAFERS_CREATE = url + "session/wafers/create";
+export const STATUS_DELETE = url + "session/status/delete";
 
 
 

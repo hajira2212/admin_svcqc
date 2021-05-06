@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { HttpAuthHelper } from "../helper/HTTPHelper";
-import { STATUS_CREATE, GET_ACTIVE_STATUS } from "../helper/APIConfig"
+import { STATUS_CREATE, STATUS_DELETE } from "../helper/APIConfig"
 import { Icons } from "../assets/icons/index"
-import { getActiveStatusList,getStatusByStatusId } from "../services/list"
+import { getActiveStatusList, getStatusByStatusId } from "../services/list"
 
 
 import {
@@ -26,15 +26,25 @@ const StatusMaster = () => {
 
     const [modal, setModal] = React.useState(false);
     const toggleModal = () => setModal(!modal);
+    const [editmodal, setEditModal] = React.useState(false);
+    const EdittoggletModal = () => setModal(!editmodal);
+
     const [is_Active, setis_Active] = React.useState(true);
+
     const [statusType, setStatusType] = React.useState("");
+    const [statusEditType, setStatusEditType] = React.useState("");
     const [statusList, setStausList] = useState([]);
-    const [message, setMessage] = React.useState("");
+    const [statusId, setStatusId] = React.useState("");
 
     const openModal = () => {
         //this.setState({ showModal: true });
         setModal(!modal);
     }
+    const openEditModal = () => {
+        //this.setState({ showModal: true });
+        setEditModal(!editmodal);
+    }
+
     useEffect(() => {
         getStatusList();
     }, []);
@@ -44,6 +54,12 @@ const StatusMaster = () => {
         const status = getActiveStatusList().then((res) => {
             setStausList(res.data);
         });
+    }
+
+    const getStatusById = (statusId) => {
+
+        const data_items = getStatusByStatusId => {
+        }
     }
 
     const handleChange = (e) => {
@@ -68,7 +84,7 @@ const StatusMaster = () => {
                     alert(response.message);
                     statusType = "";
                 }
-
+                getStatusList();
 
             });
         }
@@ -77,12 +93,23 @@ const StatusMaster = () => {
         }
     }
 
-    const getStatusById = () => {
+    const getDeleteStatus = (statusId) => {
 
-        const statusById = getStatusByStatusId().then((res) => {
-            console.log(res.data);
-        });
+        var result = alert("Are you sure you want to delete?");
+
+        let status = HttpAuthHelper(STATUS_DELETE + "/" + statusId, "GET", null);
+        status.then(response => {
+            if (response) {
+                alert(response.message);
+                getStatusList();
+            }
+            else {
+                alert(response.message);
+            }
+        })
     }
+
+
 
     return (
         <>
@@ -111,8 +138,8 @@ const StatusMaster = () => {
                                                 <td>{status.statusType}</td>
                                                 <td>{status.is_Active ? <span class="badge badge-success">Active</span> : <span class="badge badge-danger">InActive</span>}</td>
 
-                                                <td>  <span class="badge badge-primary" onClick={openModal}>Edit  </span>  &nbsp;    
-                                                    <span class="badge badge-danger">    Delete</span></td>
+                                                <td>  <span class="badge badge-primary" onClick={() => getStatusById(status.id)}>Edit  </span>  &nbsp;
+                                                    <span class="badge badge-danger" onClick={() => getDeleteStatus(status.id)}>    Delete</span></td>
                                             </tr>
 
                                         ))}
@@ -148,6 +175,23 @@ const StatusMaster = () => {
                     <button className='btn btn-primary' onClick={() => Add_Status(statusType, is_Active)}>Save</button>
                 </ModalFooter>
             </Modal>
+
+            <Modal isOpen={editmodal} toggle={EdittoggletModal} size="md">
+                <ModalHeader>
+                    <h5>Edit Status Type</h5>
+                </ModalHeader>
+                <ModalBody>
+                    <CFormGroup>
+                        <CLabel htmlFor="statustype">Edit Status Type</CLabel>
+                        <CInput id="statusType" placeholder="Enter status type" required onChange={e => setStatusEditType(e.target.value)} />
+                    </CFormGroup>
+                </ModalBody>
+                <ModalFooter>
+                    <Button onClick={EdittoggletModal} className='btn btn-secondary'>Close</Button>
+                    <button className='btn btn-primary' onClick={() => Add_Status(statusType, is_Active)}>Update</button>
+                </ModalFooter>
+            </Modal>
+
         </>
 
     )

@@ -62,7 +62,9 @@ const WafersForms = () => {
         if (lot != "" && layer != "" && url != "" && remarks != "") {
 
             const formData = new FormData();
-            formData.append("wafersImage", wafersImage);
+
+
+            // formData.append("wafersImage", wafersImage);
             formData.append("lot", lot);
             formData.append("layer", layer);
             formData.append("url", url);
@@ -71,6 +73,11 @@ const WafersForms = () => {
             formData.append("remarks", remarks);
             formData.append("companyId", selectCompany);
             formData.append("statusId", selectStatus);
+
+
+            for (let i = 0; i < wafersImage.length; i++) {
+                formData.append("wafersImage", wafersImage[i]);
+              }
 
             let add = HttpFormDataHelper(WAFERS_CREATE, "POST", formData);
             add.then(response => {
